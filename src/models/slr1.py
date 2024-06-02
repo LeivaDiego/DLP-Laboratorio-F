@@ -167,7 +167,7 @@ class SLRParser:
                             raise ValueError(f'Reduce-Reduce conflict in state {state} on symbol {symbol}. Grammar is not SLR(1).')
                         else:
                             raise ValueError(f'Unknown conflict in state {state} on symbol {symbol}. Grammar is not SLR(1).')
-
+        print('SUCCES: SLR(1) Parsing Table generated.')
         return parse_table
 
 
@@ -219,7 +219,7 @@ class SLRParser:
         def symbols_width(symbols):
             return (width + 1) * len(symbols) - 1
         
-        print('AUGMENTED GRAMMAR:')
+        print('\nAUGMENTED GRAMMAR:')
         for i, (head, body) in enumerate(self.G_indexed):
             print(f'{i:>{len(str(len(self.G_indexed) - 1))}}: {head:>{self.max_G_prime_len}} -> {" ".join(body)}')
 
@@ -317,7 +317,7 @@ class SLRParser:
                 results['stack'].append(' '.join(stack))
                 results['symbols'].append(' '.join(symbols))
 
-            elif self.parse_table[s][a] == 'acc':
+            elif self.parse_table[s][a] == 'accept':
                 results['action'].append('accept')
 
                 break
@@ -328,6 +328,13 @@ class SLRParser:
         def print_line():
             print(f'{"".join(["+" + ("-" * (max_len + 2)) for max_len in max_lens.values()])}+')
 
+        def verify_result(result):
+            for result in results['action']:
+                if result.startswith('ERROR'):
+                    return False
+                elif result == 'accept':
+                   return True
+
         max_lens = {key: max(len(value) for value in results[key]) for key in results}
         justs = {
             'step': '>',
@@ -336,7 +343,7 @@ class SLRParser:
             'input': '>',
             'action': ''
         }
-
+        print('PARSING PROCESS:')
         print_line()
         print(''.join(
             [f'| {history[0]:^{max_len}} ' for history, max_len in zip(results.values(), max_lens.values())]) + '|')
@@ -344,5 +351,13 @@ class SLRParser:
         for i, step in enumerate(results['step'][:-1], 1):
             print(''.join([f'| {history[i]:{just}{max_len}} ' for history, just, max_len in
                            zip(results.values(), justs.values(), max_lens.values())]) + '|')
-
+            
         print_line()
+        print()
+
+        if verify_result(results['action']):
+            print('SUCCESS: Input string can be parsed by given grammar.')
+        else:
+            raise ValueError('Input string cannot be parsed by given grammar.')
+
+    

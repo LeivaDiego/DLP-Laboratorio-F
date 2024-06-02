@@ -45,7 +45,7 @@ def verify_tokens(seccion_tokens):
         else:
             raise ValueError(f"Unknown or invalid declaration in the token section: {linea}")
 
-    print("SUCCESS: Token analysis completed")
+    print("SUCCESS: YAPAR Token analysis completed")
     return tokens_declarados
 
 
@@ -94,7 +94,7 @@ def verify_productions(seccion_producciones, tokens_declarados):
             if not opcion.strip():
                 raise ValueError("An option in production '{nombre}' is empty")
             
-    print("SUCCESS: Production analysis completed")
+    print("SUCCESS: YAPAR Production analysis completed")
     return producciones_dict
 
 
