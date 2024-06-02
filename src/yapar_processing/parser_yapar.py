@@ -21,7 +21,7 @@ def read_yapar(archivo):
 def verify_tokens(seccion_tokens):
     seccion_tokens = delete_comments(seccion_tokens)
     lineas = seccion_tokens.strip().split('\n')
-    
+    ignored_tokens = set()
     tokens_declarados = set()
     
     for linea in lineas:
@@ -42,11 +42,12 @@ def verify_tokens(seccion_tokens):
             token_ignore = partes[1].upper()
             if token_ignore not in tokens_declarados:
                 raise ValueError(f"Attempt to ignore an undeclared token: {token_ignore}")
+            ignored_tokens.add(token_ignore.strip())
         else:
             raise ValueError(f"Unknown or invalid declaration in the token section: {linea}")
 
     print("SUCCESS: YAPAR Token analysis completed")
-    return tokens_declarados
+    return tokens_declarados, ignored_tokens
 
 
 
@@ -100,10 +101,10 @@ def verify_productions(seccion_producciones, tokens_declarados):
 
 def parse_yalp(archivo):
     seccion_tokens, seccion_producciones = read_yapar(archivo)
-    tokens_declarados = verify_tokens(seccion_tokens)
+    tokens_declarados, ignored_tokens = verify_tokens(seccion_tokens)
     producciones_declaradas = verify_productions(seccion_producciones, tokens_declarados)
     producciones_declaradas = {k: ' '.join(v.split()) for k, v in producciones_declaradas.items()}
-    return tokens_declarados, producciones_declaradas
+    return tokens_declarados, producciones_declaradas, ignored_tokens
 
 
 def verify_yalex_tokens(yalex_parser_code, tokens_declarados):

@@ -1,3 +1,5 @@
+{}
+%%
 (* Lexer para Gramática No. 2 - Expresiones aritméticas extendidas *)
 
 (* Introducir cualquier header aqui *)
@@ -22,3 +24,5 @@ rule tokens =
   | ')'       { return RPAREN }
 
 (* Introducir cualquier trailer aqui *)
+%%
+{}

@@ -1,29 +1,30 @@
 from models.slr1 import *
 from models.grammar import *
-from utils.path_cleaner import *
 from yapar_processing.parser_yapar import *
 from yalex_processing.parser_yalex import *
+from scanners.scan.lexicalAnalizer import run as run_scanner
+
 def main():
 	try:
 		# Procesamiento yalex
-		yalex_path = input("Enter the path to the YALEX file: ")
-		yalex_path = replace_slash_with_backslash(yalex_path)
-		yalex_tokens = parse_yalex_tokens(yalex_path)
-		
-		# Procesamiento yapar
-		yalp_path = input("Enter the path to the YAPAR file: ")
-		yalp_path = replace_slash_with_backslash(yalp_path)
-		yapar_tokens, productions = parse_yalp(yalp_path)
-		verify_yalex_tokens(yalex_tokens, yapar_tokens)
+		input_path = "C:/Users/diego/Documents/UVG/7mo Semestre/Diseño de Lenguajes de Programacion/Laboratorio-F/src/files/input_texts/text.txt"
+		tokens = run_scanner(input_path)
+        
+		# # Procesamiento yapar
+		yalp_path = "C:/Users/diego/Documents/UVG/7mo Semestre/Diseño de Lenguajes de Programacion/Laboratorio-F/src/files/yapar_files/slr-1.yalp"
+		yapar_tokens, productions, ignored = parse_yalp(yalp_path)
+		clean_tokens = []
+		for token in tokens:
+			if token not in ignored:
+				clean_tokens.append(token)
+		input_text = " ".join(clean_tokens)
 
 		# Crear la gramática y el parser SLR1
 		grammar_str = dict_to_grammar_str(productions)
 		grammar = Grammar(grammar_str)
 		slr_parser = SLRParser(grammar)
 
-		# Ejecutar el parser SLR1
-		input_text = input("Enter the text to parse: ")
-		print()
+		# # Ejecutar el parser SLR1
 		slr_parser.print_info()
 		results = slr_parser.LR_parser(input_text)
 		slr_parser.print_LR_parser(results)
