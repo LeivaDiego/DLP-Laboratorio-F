@@ -152,7 +152,21 @@ class SLRParser:
                 if j in self.C:
                     parse_table[i][A] = self.C.index(j)
 
-            
+        # Check for conflicts and handle errors
+        for state, actions in parse_table.items():
+            for symbol, action in actions.items():
+                if type(action) == str:
+                    if '/' in action:
+                        actions_list = action.split('/')
+                        has_shift = any(a.startswith('s') for a in actions_list)
+                        has_reduce = any(a.startswith('r') for a in actions_list)
+
+                        if has_shift and has_reduce:
+                            raise ValueError(f'Shift-Reduce conflict in state {state} on symbol {symbol}. Grammar is not SLR(1).')
+                        elif len([a for a in actions_list if a.startswith('r')]) > 1:
+                            raise ValueError(f'Reduce-Reduce conflict in state {state} on symbol {symbol}. Grammar is not SLR(1).')
+                        else:
+                            raise ValueError(f'Unknown conflict in state {state} on symbol {symbol}. Grammar is not SLR(1).')
 
         return parse_table
 
@@ -204,9 +218,8 @@ class SLRParser:
 
         def symbols_width(symbols):
             return (width + 1) * len(symbols) - 1
-
+        
         print('AUGMENTED GRAMMAR:')
-
         for i, (head, body) in enumerate(self.G_indexed):
             print(f'{i:>{len(str(len(self.G_indexed) - 1))}}: {head:>{self.max_G_prime_len}} -> {" ".join(body)}')
 
