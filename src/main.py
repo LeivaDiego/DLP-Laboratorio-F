@@ -11,7 +11,7 @@ def main():
 		tokens = run_scanner(input_path)
         
 		# # Procesamiento yapar
-		yalp_path = "C:/Users/diego/Documents/UVG/7mo Semestre/Diseño de Lenguajes de Programacion/Laboratorio-F/src/files/yapar_files/slr-1.yalp"
+		yalp_path = "C:/Users/diego/Documents/UVG/7mo Semestre/Diseño de Lenguajes de Programacion/Laboratorio-F/src/files/yapar_files/conflicto.yalp"
 		yapar_tokens, productions, ignored = parse_yalp(yalp_path)
 		clean_tokens = []
 		for token in tokens:
