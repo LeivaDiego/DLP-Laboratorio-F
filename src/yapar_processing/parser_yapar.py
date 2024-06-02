@@ -92,7 +92,7 @@ def verify_productions(seccion_producciones, tokens_declarados):
                         raise ValueError(f"Undeclared production name '{elemento}' used in production '{nombre}'")
 
             if not opcion.strip():
-                raise ValueError("An option in production '{nombre}' is empty")
+                raise ValueError(f"An option in production '{nombre}' is empty")
             
     print("SUCCESS: YAPAR Production analysis completed")
     return producciones_dict
