@@ -104,3 +104,15 @@ def parse_yalp(archivo):
     producciones_declaradas = verify_productions(seccion_producciones, tokens_declarados)
     producciones_declaradas = {k: ' '.join(v.split()) for k, v in producciones_declaradas.items()}
     return tokens_declarados, producciones_declaradas
+
+
+def verify_yalex_tokens(yalex_parser_code, tokens_declarados):
+    yalex_tokens = set()
+    for tuple in yalex_parser_code:
+        yalex_tokens.add(tuple[1])
+    
+    for token in tokens_declarados:
+        if token not in yalex_tokens:
+            raise ValueError(f"Undeclared token '{token}' on YALEX parser configuration")
+    
+    print("SUCCESS: YALEX token cross-validation completed.")
